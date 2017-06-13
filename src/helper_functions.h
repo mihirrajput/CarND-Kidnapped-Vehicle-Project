@@ -7,6 +7,7 @@
 
 #ifndef HELPER_FUNCTIONS_H_
 #define HELPER_FUNCTIONS_H_
+#define _USE_MATH_DEFINES // for C++  
 
 #include <sstream>
 #include <fstream>

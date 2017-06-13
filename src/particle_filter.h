@@ -45,7 +45,7 @@ public:
 
 	// Constructor
 	// @param M Number of particles
-	ParticleFilter() : num_particles(0), is_initialized(false) {}
+	ParticleFilter() : num_particles(100), is_initialized(false) {}
 
 	// Destructor
 	~ParticleFilter() {}
@@ -91,6 +91,8 @@ public:
 	 */
 	void updateWeights(double sensor_range, double std_landmark[], std::vector<LandmarkObs> observations,
 			Map map_landmarks);
+
+	double prob(double x, double y, float xm, float ym, double std_landmark[]);
 	
 	/**
 	 * resample Resamples from the updated set of particles to form
