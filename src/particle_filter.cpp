@@ -36,11 +36,13 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	for (int i = 0; i < num_particles; ++i) {
 		// Sample from the normal distrubtions 
 		// where "gen" is the random engine initialized earlier.
-		particles[i].id = i;
-		particles[i].x = dist_x(gen);
-		particles[i].y = dist_y(gen);
-		particles[i].theta = dist_theta(gen);
-		particles[i].weight = 1.0;
+		Particle particle;
+		particle.id = i;
+		particle.x = dist_x(gen);
+		particle.y = dist_y(gen);
+		particle.theta = dist_theta(gen);
+		particle.weight = 1.0;
+		particles.push_back(particle);
 		weights.push_back(1.0);
 	}
 }
