@@ -47,9 +47,13 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		particle.weight = 1.0;
 		particles.push_back(particle);
 		weights.push_back(1.0);
+
+		// debug
+		cout << particles[i].x << "\t" << particles[i].y << "\t" << particles[i].theta << "\n";
 	}
 	// To make sure init executes only once
 	is_initialized = true;
+	// debug
 	cout << "init complete" << "\n";
 }
 
@@ -89,6 +93,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			particles[i].y = dist_y(gen);
 			normal_distribution<double> dist_theta(particles[i].theta, std_pos[2]);
 			particles[i].theta = dist_theta(gen);
+
+			// debug
+			cout << particles[i].x << "\t" << particles[i].y << "\t" << particles[i].theta << "\n";
 		}
 	
 }
