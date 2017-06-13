@@ -64,6 +64,10 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 	
 	default_random_engine gen;
+	normal_distribution<double> dist_x(0, std_pos[0]);
+	normal_distribution<double> dist_y(0, std_pos[1]);
+	normal_distribution<double> dist_theta(0, std_pos[2]);
+
 	double yawrate_times_dt = yaw_rate*delta_t;
 	
 		for (int i = 0; i < num_particles; ++i) {
@@ -75,24 +79,16 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			if (yaw_rate>0.001)
 			{
 				double ratio_vel_yawrate = velocity / yaw_rate;
-				particles[i].x = particles[i].x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta));
-				particles[i].y = particles[i].y + ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta));
+				particles[i].x = particles[i].x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
+				particles[i].y = particles[i].y + ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta)) + dist_y(gen);
 
 			}
 			else
 			{
-				particles[i].x = particles[i].x + velocity*cos(theta)*delta_t;
-				particles[i].y = particles[i].y + velocity*sin(theta)*delta_t;
+				particles[i].x = particles[i].x + velocity*cos(theta)*delta_t + dist_x(gen);
+				particles[i].y = particles[i].y + velocity*sin(theta)*delta_t + dist_y(gen);
 			}
-			particles[i].theta = theta + yawrate_times_dt;
-
-			// introducing motion uncertainty
-			normal_distribution<double> dist_x(particles[i].x, std_pos[0]);
-			particles[i].x = dist_x(gen);
-			normal_distribution<double> dist_y(particles[i].y, std_pos[1]);
-			particles[i].y = dist_y(gen);
-			normal_distribution<double> dist_theta(particles[i].theta, std_pos[2]);
-			particles[i].theta = dist_theta(gen);
+			particles[i].theta = theta + yawrate_times_dt + dist_theta(gen);
 
 			// debug
 			cout << particles[i].x << "\t" << particles[i].y << "\t" << particles[i].theta << "\n";
