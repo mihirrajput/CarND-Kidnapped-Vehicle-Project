@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 	// Initialize the number of particles
-	num_particles = 100;
+	num_particles = 3;
 	// Make a Generator
 	default_random_engine gen;
 	// This line creates a normal (Gaussian) distribution for x
@@ -35,6 +35,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	normal_distribution<double> dist_y(y, std[1]);
 	// This line creates a normal (Gaussian) distribution for theta
 	normal_distribution<double> dist_theta(theta, std[2]);
+
+	cout << "Initialization" << "\n";
 	// Sample particles from the distribution
 	for (int i = 0; i < num_particles; ++i) {
 		// Sample from the normal distrubtions 
@@ -47,6 +49,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		particle.weight = 1.0;
 		particles.push_back(particle);
 		weights.push_back(1.0);
+		cout << "id: "<<particle.id << " x: "<<particle.x << " y: "<<particle.y<<" theta: "<<particle.theta<<"\n";
 	}
 	// To make sure init executes only once
 	is_initialized = true;
@@ -62,9 +65,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	normal_distribution<double> dist_x(0, std_pos[0]);
 	normal_distribution<double> dist_y(0, std_pos[1]);
 	normal_distribution<double> dist_theta(0, std_pos[2]);
-
 	double yawrate_times_dt = yaw_rate*delta_t;
 
+	cout << "Prediction" << "\n";
 	for (auto& particle:particles) {
 		// Sample from the normal distrubtions 
 		// where "gen" is the random engine initialized earlier.
@@ -83,6 +86,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			particle.y = particle.y + velocity*sin(theta)*delta_t + dist_y(gen);
 		}
 		particle.theta = theta + yawrate_times_dt + dist_theta(gen);
+		cout << "id: " << particle.id << " x: " << particle.x << " y: " << particle.y << " theta: " << particle.theta << "\n";
 	}
 }
 
@@ -126,7 +130,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
 	Map temp_landmarks;
-	//weights.clear(); // clear the previous weights vector
+	weights.clear(); // clear the previous weights vector
 
 	for (auto& particle : particles)
 	{
@@ -142,11 +146,14 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			}
 		}
 
+		particle.weight = 1.0; // set it to 1 before the next calculations begin
+
 		LandmarkObs LMObs;
 		for (auto& LMObs : observations)
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
 			double temp_y = stheta*LMObs.x + ctheta*LMObs.y + ytrans;
+			cout << particle.id << "local" << LMObs.x << " " << LMObs.y << "global" << temp_x << " " << temp_y;
 			//particle.sense_x[j] = temp_x; //obs rotated then translated 
 			//particle.sense_y[j] = temp_y; //obs rotated then translated
 
@@ -161,9 +168,19 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 					min_id = temp_landmarks.landmark_list[k].id_i;
 				}
 			}
+			
 			particle.associations.push_back(min_id);
-			particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
-	
+			cout << " assoc: " << min_id;
+
+			if (min == 999.9) {
+				particle.weight = 0.0;
+			}
+			else
+			{
+				particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
+			}
+			cout << " weight: " << particle.weight << "\n";
+			
 		}
 		weights.push_back(particle.weight);
 		temp_landmarks.landmark_list.clear();
