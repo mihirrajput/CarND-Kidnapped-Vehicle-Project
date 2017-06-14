@@ -159,7 +159,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		cout << "pf cpp line 159" << "\n";
 
 		LandmarkObs LMObs;
-		int j = 0;
+		//int j = 0;
 		for (auto& LMObs : observations)
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
@@ -169,7 +169,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 			double min = 999.9;
 			int min_id = 0; 
-			cout << "pf cpp line 171" << "\n";
+			cout << "pf cpp line 172" << "\n";
 			for (int k = 0; k < temp_landmarks.landmark_list.size(); ++k)
 			{
 				double distance = dist(temp_x, temp_y, temp_landmarks.landmark_list[k].x_f, temp_landmarks.landmark_list[k].y_f);
@@ -179,10 +179,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 					min_id = temp_landmarks.landmark_list[k].id_i;
 				}
 			}
-			cout << "pf cpp line 179" << "\n";
-			particle.associations[j] = min_id;
+			cout << "pf cpp line 182" << "\n";
+			particle.associations.push_back(min_id);
+			cout << "pf cpp line 184" << "\n";
 			particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
-			j += 1;
+			cout << "pf cpp line 186" << "\n";
+			//j += 1;
 		}
 		cout << "pf cpp line 183" << "\n";
 		weights.push_back(particle.weight);
