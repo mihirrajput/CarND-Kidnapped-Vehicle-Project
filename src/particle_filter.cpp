@@ -164,8 +164,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
 			double temp_y = stheta*LMObs.x + ctheta*LMObs.y + ytrans;
-			particle.sense_x[j] = temp_x; //obs rotated then translated 
-			particle.sense_y[j] = temp_y; //obs rotated then translated
+			//particle.sense_x[j] = temp_x; //obs rotated then translated 
+			//particle.sense_y[j] = temp_y; //obs rotated then translated
 
 			double min = 999.9;
 			int min_id = 0; 
