@@ -47,14 +47,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		particle.weight = 1.0;
 		particles.push_back(particle);
 		weights.push_back(1.0);
-
-		// debug
-		cout << particles[i].x << "\t" << particles[i].y << "\t" << particles[i].theta << "\n";
 	}
 	// To make sure init executes only once
 	is_initialized = true;
-	// debug
-	cout << "init complete" << "\n";
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
@@ -69,13 +64,11 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	normal_distribution<double> dist_theta(0, std_pos[2]);
 
 	double yawrate_times_dt = yaw_rate*delta_t;
-	cout << "72"<<"\n";
 
 	for (auto& particle:particles) {
 		// Sample from the normal distrubtions 
 		// where "gen" is the random engine initialized earlier.
 		double theta = particle.theta;
-		cout << "78" << "\n";
 
 		// expected pose value from deterministic motion model
 		if (yaw_rate>0.001)
@@ -83,22 +76,14 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			double ratio_vel_yawrate = velocity / yaw_rate;
 			particle.x = particle.x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
 			particle.y = particle.y + ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta)) + dist_y(gen);
-			cout << "86" << "\n";
 		}
 		else
 		{
 			particle.x = particle.x + velocity*cos(theta)*delta_t + dist_x(gen);
 			particle.y = particle.y + velocity*sin(theta)*delta_t + dist_y(gen);
-			cout << "92" << "\n";
 		}
 		particle.theta = theta + yawrate_times_dt + dist_theta(gen);
-		cout << "95" << "\n";
-
-		// debug
-		cout << particle.x << "\t" << particle.y << "\t" << particle.theta << "\n";
 	}
-	// debug
-	cout << "Predict complete" << "\n";
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
@@ -156,10 +141,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				temp_landmarks.landmark_list.push_back(map_landmarks.landmark_list[z]);
 			}
 		}
-		cout << "pf cpp line 159" << "\n";
 
 		LandmarkObs LMObs;
-		//int j = 0;
 		for (auto& LMObs : observations)
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
@@ -169,7 +152,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 			double min = 999.9;
 			int min_id = 0; 
-			cout << "pf cpp line 172" << "\n";
 			for (int k = 0; k < temp_landmarks.landmark_list.size(); ++k)
 			{
 				double distance = dist(temp_x, temp_y, temp_landmarks.landmark_list[k].x_f, temp_landmarks.landmark_list[k].y_f);
@@ -179,14 +161,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 					min_id = temp_landmarks.landmark_list[k].id_i;
 				}
 			}
-			cout << "pf cpp line 182" << "\n";
 			particle.associations.push_back(min_id);
-			cout << "pf cpp line 184" << "\n";
 			particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
-			cout << "pf cpp line 186" << "\n";
-			//j += 1;
+	
 		}
-		cout << "pf cpp line 183" << "\n";
 		weights.push_back(particle.weight);
 		temp_landmarks.landmark_list.clear();
 	}
