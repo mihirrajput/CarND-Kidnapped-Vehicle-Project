@@ -126,7 +126,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
 	Map temp_landmarks;
-	weights.clear(); // clear the previous weights vector
+	//weights.clear(); // clear the previous weights vector
 
 	for (auto& particle : particles)
 	{
