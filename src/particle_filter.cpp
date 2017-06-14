@@ -172,7 +172,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			particle.associations.push_back(min_id);
 			cout << " assoc: " << min_id;
 
-			if (min == 999.9) {
+			if (observations.size() == 0) {
 				particle.weight = 0.0;
 			}
 			else
