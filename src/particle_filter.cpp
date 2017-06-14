@@ -159,12 +159,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		cout << "pf cpp line 159" << "\n";
 
 		LandmarkObs LMObs;
+		int j = 0;
 		for (auto& LMObs : observations)
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
 			double temp_y = stheta*LMObs.x + ctheta*LMObs.y + ytrans;
-			//particle.sense_x[j] = temp_x; //obs rotated then translated 
-			//particle.sense_y[j] = temp_y; //obs rotated then translated
+			particle.sense_x[j] = temp_x; //obs rotated then translated 
+			particle.sense_y[j] = temp_y; //obs rotated then translated
 
 			double min = 999.9;
 			int min_id = 0; 
@@ -181,6 +182,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			cout << "pf cpp line 179" << "\n";
 			particle.associations[j] = min_id;
 			particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
+			j += 1;
 		}
 		cout << "pf cpp line 183" << "\n";
 		weights.push_back(particle.weight);
