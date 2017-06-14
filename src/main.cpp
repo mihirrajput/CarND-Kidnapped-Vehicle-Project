@@ -78,7 +78,7 @@ int main()
 			// Predict the vehicle's next state from previous (noiseless control) data.
 		  	double previous_velocity = std::stod(j[1]["previous_velocity"].get<std::string>());
 			double previous_yawrate = std::stod(j[1]["previous_yawrate"].get<std::string>());
-			cout << "going in predict" << "\n";
+
 			pf.prediction(delta_t, sigma_pos, previous_velocity, previous_yawrate);
 		  }
 

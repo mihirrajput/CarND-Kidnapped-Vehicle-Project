@@ -143,12 +143,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	Map temp_landmarks;
 	weights.clear(); // clear the previous weights vector
 
-	for (int i = 0; i < num_particles; ++i)
+	for (auto& particle : particles)
 	{
-		double ctheta = cos(particles[i].theta);
-		double stheta = sin(particles[i].theta);
-		double xtrans = particles[i].x;
-		double ytrans = particles[i].y;
+		double ctheta = cos(particle.theta);
+		double stheta = sin(particle.theta);
+		double xtrans = particle.x;
+		double ytrans = particle.y;
 
 		for (int z = 0; z < map_landmarks.landmark_list.size(); ++z)
 		{
@@ -156,13 +156,14 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				temp_landmarks.landmark_list.push_back(map_landmarks.landmark_list[z]);
 			}
 		}
+		cout << "pf cpp line 159" << "\n";
 
 		for (int j = 0; j < observations.size(); ++j)
 		{
 			double temp_x = ctheta*observations[j].x - stheta*observations[j].y + xtrans;
 			double temp_y = stheta*observations[j].x + ctheta*observations[j].y + ytrans;
-			particles[i].sense_x[j] = temp_x; //obs rotated then translated 
-			particles[i].sense_y[j] = temp_y; //obs rotated then translated
+			particle.sense_x[j] = temp_x; //obs rotated then translated 
+			particle.sense_y[j] = temp_y; //obs rotated then translated
 
 			double min = 999.9;
 			int min_id = 0;
@@ -175,10 +176,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 					min_id = temp_landmarks.landmark_list[k].id_i;
 				}
 			}
-			particles[i].associations[j] = min_id;
-			particles[i].weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
+			cout << "pf cpp line 179" << "\n";
+			particle.associations[j] = min_id;
+			particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
 		}
-		weights.push_back(particles[i].weight);
+		cout << "pf cpp line 183" << "\n";
+		weights.push_back(particle.weight);
 		temp_landmarks.landmark_list.clear();
 	}
 }
