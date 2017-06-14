@@ -69,11 +69,13 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	normal_distribution<double> dist_theta(0, std_pos[2]);
 
 	double yawrate_times_dt = yaw_rate*delta_t;
-	
+	cout << "72"<<"\n";
+
 	for (auto& particle:particles) {
 		// Sample from the normal distrubtions 
 		// where "gen" is the random engine initialized earlier.
 		double theta = particle.theta;
+		cout << "78" << "\n";
 
 		// expected pose value from deterministic motion model
 		if (yaw_rate>0.001)
@@ -81,14 +83,16 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			double ratio_vel_yawrate = velocity / yaw_rate;
 			particle.x = particle.x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
 			particle.y = particle.y + ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta)) + dist_y(gen);
-
+			cout << "86" << "\n";
 		}
 		else
 		{
 			particle.x = particle.x + velocity*cos(theta)*delta_t + dist_x(gen);
 			particle.y = particle.y + velocity*sin(theta)*delta_t + dist_y(gen);
+			cout << "92" << "\n";
 		}
 		particle.theta = theta + yawrate_times_dt + dist_theta(gen);
+		cout << "95" << "\n";
 
 		// debug
 		cout << particle.x << "\t" << particle.y << "\t" << particle.theta << "\n";
