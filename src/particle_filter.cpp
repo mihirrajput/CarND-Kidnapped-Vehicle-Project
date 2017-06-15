@@ -74,7 +74,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		double theta = particle.theta;
 
 		// expected pose value from deterministic motion model
-		if (yaw_rate>0.001)
+		if (fabs(yaw_rate)>0.001)
 		{
 			double ratio_vel_yawrate = velocity / yaw_rate;
 			particle.x = particle.x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
@@ -130,7 +130,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
 	Map temp_landmarks;
-	weights.clear(); // clear the previous weights vector
 
 	for (auto& particle : particles)
 	{
@@ -200,6 +199,7 @@ void ParticleFilter::resample() {
 		new_particles.push_back(particles[d(gen)]);
 	}
 	particles = new_particles; // resampled set of particles
+	weights.clear(); // clear the previous weights vector
 }
 
 Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> associations, std::vector<double> sense_x, std::vector<double> sense_y)
