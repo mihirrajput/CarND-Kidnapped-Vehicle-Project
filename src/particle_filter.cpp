@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 	// Initialize the number of particles
-	num_particles = 10;
+	num_particles = 100;
 	// Make a Generator
 	default_random_engine gen;
 	// This line creates a normal (Gaussian) distribution for x
@@ -36,7 +36,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// This line creates a normal (Gaussian) distribution for theta
 	normal_distribution<double> dist_theta(theta, std[2]);
 
-	cout << "Initialization" << "\n";
+	//cout << "Initialization" << "\n";
 	// Sample particles from the distribution
 	for (int i = 0; i < num_particles; ++i) {
 		// Sample from the normal distrubtions 
@@ -49,7 +49,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		particle.weight = 1.0;
 		particles.push_back(particle);
 		weights.push_back(1.0);
-		cout << "id: "<<particle.id << " x: "<<particle.x << " y: "<<particle.y<<" theta: "<<particle.theta<<"\n";
+		//cout << "id: "<<particle.id << " x: "<<particle.x << " y: "<<particle.y<<" theta: "<<particle.theta<<"\n";
 	}
 	// To make sure init executes only once
 	is_initialized = true;
@@ -67,7 +67,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	normal_distribution<double> dist_theta(0, std_pos[2]);
 	double yawrate_times_dt = yaw_rate*delta_t;
 
-	cout << "Prediction" << "\n";
+	//cout << "Prediction" << "\n";
 	for (auto& particle:particles) {
 		// Sample from the normal distrubtions 
 		// where "gen" is the random engine initialized earlier.
@@ -86,7 +86,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			particle.y += velocity*sin(theta)*delta_t + dist_y(gen);
 		}
 		particle.theta += yawrate_times_dt + dist_theta(gen);
-		cout << "id: " << particle.id << " x: " << particle.x << " y: " << particle.y << " theta: " << particle.theta << "\n";
+		//cout << "id: " << particle.id << " x: " << particle.x << " y: " << particle.y << " theta: " << particle.theta << "\n";
 	}
 }
 
@@ -171,7 +171,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			}
 			
 			particle.associations.push_back(min_id);
-			cout << " assoc: " << min_id;
+			//cout << " assoc: " << min_id;
 
 			if (observations.size() == 0) {
 				particle.weight = 0.0;
@@ -180,7 +180,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			{
 				particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id-1].x_f, map_landmarks.landmark_list[min_id-1].y_f, std_landmark);
 			}
-			cout << " weight: " << particle.weight << "\n";
+			//cout << " weight: " << particle.weight << "\n";
 			
 		}
 		weights.push_back(particle.weight);
