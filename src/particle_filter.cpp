@@ -111,7 +111,7 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	}
 }
 
-double ParticleFilter::prob(double x, double y, float xm, float ym, double std_landmark[]) {
+double prob(double x, double y, float xm, float ym, double std_landmark[]) {
 	double xpart = -0.5*(x - xm)*(x - xm) / (std_landmark[0] * std_landmark[0]);
 	double ypart = -0.5*(y - ym)*(y - ym) / (std_landmark[1] * std_landmark[1]);
 	return exp(xpart + ypart) / (2 * M_PI*std_landmark[0] * std_landmark[1]);
