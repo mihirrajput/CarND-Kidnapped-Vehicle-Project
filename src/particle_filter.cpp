@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 	// Initialize the number of particles
-	num_particles = 1;
+	num_particles = 10;
 	// Make a Generator
 	default_random_engine gen;
 	// This line creates a normal (Gaussian) distribution for x
@@ -178,7 +178,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			}
 			else
 			{
-				particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id].x_f, map_landmarks.landmark_list[min_id].y_f, std_landmark);
+				particle.weight *= prob(temp_x, temp_y, map_landmarks.landmark_list[min_id-1].x_f, map_landmarks.landmark_list[min_id-1].y_f, std_landmark);
 			}
 			cout << " weight: " << particle.weight << "\n";
 			
