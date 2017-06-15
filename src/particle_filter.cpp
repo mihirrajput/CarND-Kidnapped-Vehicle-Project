@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 	// Initialize the number of particles
-	num_particles = 3;
+	num_particles = 1;
 	// Make a Generator
 	default_random_engine gen;
 	// This line creates a normal (Gaussian) distribution for x
@@ -77,15 +77,15 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		if (fabs(yaw_rate)>0.001)
 		{
 			double ratio_vel_yawrate = velocity / yaw_rate;
-			particle.x = particle.x + ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
-			particle.y = particle.y + ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta)) + dist_y(gen);
+			particle.x += ratio_vel_yawrate*(sin(theta + yawrate_times_dt) - sin(theta)) + dist_x(gen);
+			particle.y += ratio_vel_yawrate*(-cos(theta + yawrate_times_dt) + cos(theta)) + dist_y(gen);
 		}
 		else
 		{
-			particle.x = particle.x + velocity*cos(theta)*delta_t + dist_x(gen);
-			particle.y = particle.y + velocity*sin(theta)*delta_t + dist_y(gen);
+			particle.x += velocity*cos(theta)*delta_t + dist_x(gen);
+			particle.y += velocity*sin(theta)*delta_t + dist_y(gen);
 		}
-		particle.theta = theta + yawrate_times_dt + dist_theta(gen);
+		particle.theta += yawrate_times_dt + dist_theta(gen);
 		cout << "id: " << particle.id << " x: " << particle.x << " y: " << particle.y << " theta: " << particle.theta << "\n";
 	}
 }
@@ -130,6 +130,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   3.33
 	//   http://planning.cs.uiuc.edu/node99.html
 	Map temp_landmarks;
+	temp_landmarks.landmark_list.clear(); // clear the vector
+	weights.clear(); // clear the previous weights vector
 
 	for (auto& particle : particles)
 	{
