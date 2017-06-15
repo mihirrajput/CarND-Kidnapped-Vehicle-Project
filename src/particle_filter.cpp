@@ -154,7 +154,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		{
 			double temp_x = ctheta*LMObs.x - stheta*LMObs.y + xtrans;
 			double temp_y = stheta*LMObs.x + ctheta*LMObs.y + ytrans;
-			cout << particle.id << "local" << LMObs.x << " " << LMObs.y << "global" << temp_x << " " << temp_y;
+			//cout << particle.id << "local" << LMObs.x << " " << LMObs.y << "global" << temp_x << " " << temp_y;
 			//particle.sense_x[j] = temp_x; //obs rotated then translated 
 			//particle.sense_y[j] = temp_y; //obs rotated then translated
 
@@ -170,7 +170,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				}
 			}
 			
-			particle.associations.push_back(min_id);
+			//particle.associations.push_back(min_id);
 			//cout << " assoc: " << min_id;
 
 			if (observations.size() == 0) {
