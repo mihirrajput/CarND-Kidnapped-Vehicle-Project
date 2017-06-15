@@ -92,7 +92,7 @@ public:
 	void updateWeights(double sensor_range, double std_landmark[], std::vector<LandmarkObs> observations,
 			Map map_landmarks);
 
-	double prob(double x, double y, float xm, float ym, double std_landmark[]);
+	//double prob(double x, double y, float xm, float ym, double std_landmark[]);
 	
 	/**
 	 * resample Resamples from the updated set of particles to form
